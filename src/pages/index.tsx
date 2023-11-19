@@ -29,16 +29,6 @@ export default function Home() {
   const [assistantMessage, setAssistantMessage] = useState("");
 
   useEffect(() => {
-    const openai = process.env.NEXT_PUBLIC_OPEN_AI_KEY
-    if (openAiKey === "" || openAiKey === undefined) {
-      setOpenAiKey(openai || "")
-    }
-    if (koeiromapKey === "" || koeiromapKey === undefined) {
-      setKoeiromapKey(process.env.NEXT_PUBLIC_KOEIROMAP_KEY || "")
-    }
-  }, []);
-
-  useEffect(() => {
     if (window.localStorage.getItem("chatVRMParams")) {
       const params = JSON.parse(
         window.localStorage.getItem("chatVRMParams") as string
