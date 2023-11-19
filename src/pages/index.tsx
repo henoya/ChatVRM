@@ -9,7 +9,7 @@ import {
 import { speakCharacter } from "@/features/messages/speakCharacter";
 import { MessageInputContainer } from "@/components/messageInputContainer";
 import { SYSTEM_PROMPT } from "@/features/constants/systemPromptConstants";
-import { KoeiroParam, DEFAULT_PARAM } from "@/features/constants/koeiroParam";
+import { KoeiroParam, DEFAULT_PARAM, PRESET_A } from "@/features/constants/koeiroParam";
 import { getChatResponseStream } from "@/features/chat/openAiChat";
 import { Introduction } from "@/components/introduction";
 import { Menu } from "@/components/menu";
@@ -22,10 +22,21 @@ export default function Home() {
   const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
   const [openAiKey, setOpenAiKey] = useState("");
   const [koeiromapKey, setKoeiromapKey] = useState("");
-  const [koeiroParam, setKoeiroParam] = useState<KoeiroParam>(DEFAULT_PARAM);
+  const [koeiroParam, setKoeiroParam] = useState<KoeiroParam>(PRESET_A);
+  // const [koeiroParam, setKoeiroParam] = useState<KoeiroParam>(DEFAULT_PARAM);
   const [chatProcessing, setChatProcessing] = useState(false);
   const [chatLog, setChatLog] = useState<Message[]>([]);
   const [assistantMessage, setAssistantMessage] = useState("");
+
+  useEffect(() => {
+    const openai = process.env.NEXT_PUBLIC_OPEN_AI_KEY
+    if (openAiKey === "" || openAiKey === undefined) {
+      setOpenAiKey(openai || "")
+    }
+    if (koeiromapKey === "" || koeiromapKey === undefined) {
+      setKoeiromapKey(process.env.NEXT_PUBLIC_KOEIROMAP_KEY || "")
+    }
+  }, []);
 
   useEffect(() => {
     if (window.localStorage.getItem("chatVRMParams")) {
@@ -77,6 +88,7 @@ export default function Home() {
    */
   const handleSendChat = useCallback(
     async (text: string) => {
+      console.log(`handleSendChat: start`)
       if (!openAiKey) {
         setAssistantMessage("APIキーが入力されていません");
         return;
@@ -187,12 +199,12 @@ export default function Home() {
   return (
     <div className={"font-M_PLUS_2"}>
       <Meta />
-      <Introduction
+      {/* <Introduction
         openAiKey={openAiKey}
         koeiroMapKey={koeiromapKey}
         onChangeAiKey={setOpenAiKey}
         onChangeKoeiromapKey={setKoeiromapKey}
-      />
+      /> */}
       <VrmViewer />
       <MessageInputContainer
         isChatProcessing={chatProcessing}
